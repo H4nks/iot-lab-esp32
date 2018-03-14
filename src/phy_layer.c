@@ -25,8 +25,8 @@
 
 #include "phy_layer.h"
 
-#define WIFI_SSID   "ssid"
-#define WIFI_PASS   "password"
+#define WIFI_SSID   "HanksDroid"
+#define WIFI_PASS   "alpine123"
 
 EventGroupHandle_t wifi_event_group;
 const int IPv4_CONNECTED_BIT = BIT0;
@@ -43,15 +43,16 @@ event_handler(void *ctx, system_event_t *event)
     switch(event->event_id) {
 
         case SYSTEM_EVENT_STA_START:
-            // TODO failwith "Student, this is your job!"
+            esp_wifi_connect();
             break;
 
         case SYSTEM_EVENT_STA_GOT_IP:
-            // TODO failwith "Student, this is your job!"
+            xEventGroupSetBits(wifi_event_group, IPv4_CONNECTED_BIT);
             break;
 
         case SYSTEM_EVENT_AP_STA_GOT_IP6:
-            // TODO failwith "Student, this is your job!"
+            esp_wifi_connect();
+            xEventGroupSetBits(wifi_event_group, IPv6_CONNECTED_BIT);
             break;
 
         case SYSTEM_EVENT_STA_DISCONNECTED:
@@ -107,6 +108,10 @@ _wifi_init()
 
     // configure the wifi connection and start the interface
     wifi_config_t config = {
+        .sta = {
+            .ssid = WIFI_SSID,
+            .password = WIFI_PASS,
+        }
         // TODO failwith "Student, this is your job!"
     };
 
