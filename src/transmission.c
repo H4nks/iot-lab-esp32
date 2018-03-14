@@ -105,7 +105,8 @@ perform_transmissions(void *pvParameters)
     // TODO make this function wait for the connection event
     while (1) {
         /* get a reading from transmission queue */
-        rc = ENOSYS;:
+
+        rc = transmission_dequeue(&reading);
 
         /* debug */
         print_a_reading(&reading);
@@ -119,6 +120,6 @@ perform_transmissions(void *pvParameters)
         rc = ENOSYS; 
     }
 
-end:
+// end:
     vTaskDelete(NULL);
 }
