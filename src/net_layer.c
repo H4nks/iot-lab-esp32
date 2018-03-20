@@ -67,7 +67,13 @@ network_layer_start(enum net_protocols net_proto)
         case IPv6:
             // TODO consider using the following function call in order to use IPv6:
             //      `tcpip_adapter_create_ip6_linklocal()`
-            rc = ENOSYS;
+            tcpip_adapter_if_t tcpip_adapter;
+            rc = tcpip_adapter_create_ip6_linklocal(tcpip_adapter);
+            if (rc < 0) {
+                printf("[IoT-Labs]");
+                return rc;
+            }
+            // rc = ENOSYS;
             break;
 
         case _6LowPAN:

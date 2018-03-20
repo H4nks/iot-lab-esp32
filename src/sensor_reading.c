@@ -155,7 +155,8 @@ write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
     static struct spi_transaction_t trans;
 
     trans.tx_buffer = heap_caps_malloc(len, MALLOC_CAP_DMA);
-    // FIXME do we need to allocate memory for rx_buffer for write stub? -> No.
+    // FIXME do we need to allocate memory for rx_buffer for write stub?
+    // Answer -> NO.
     // trans.rx_buffer = heap_caps_malloc(len, MALLOC_CAP_DMA);
 
     trans.flags = 0;
@@ -182,10 +183,9 @@ delay_ms(uint32_t period)
 int8_t
 _perform_sensor_readings(struct bme280_dev *dev, struct bme280_data *data)
 {
-    // TODO failwith "Students, this is your job!"
     int8_t rc;
 
-    rc = bme280_get_sensor_data(BME280_ALL, data, dev); // Fixed
+    rc = bme280_get_sensor_data(BME280_ALL, data, dev);
 
     /* debug */
     printf("temperature = %f DegC\n", (float)data->temperature / 100);
@@ -210,11 +210,8 @@ perform_sensor_readings(void *pvParameters)
         rc = ENOSYS;
         rc = _perform_sensor_readings(dev, data);
 
-        /* construct adequate data structure in order to encapsulate sensor
-         * reading
-         */
+        /* struct for storing reading */
         struct a_reading reading;
-        // reading = (struct a_reading) malloc(sizeof(struct a_reading));
         rc = make_a_reading(&reading, data);
 
         /* debug */
