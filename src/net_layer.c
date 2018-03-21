@@ -67,13 +67,21 @@ network_layer_start(enum net_protocols net_proto)
         case IPv6:
             // TODO consider using the following function call in order to use IPv6:
             //      `tcpip_adapter_create_ip6_linklocal()`
+
+            /*
+            // FIXME:   error: a label can only be part of a statement and a declaration is not a statement
+                        tcpip_adapter_if_t tcpip_adapter;
+
+            Créer interface réseau wifi setup_ipv4
+
             tcpip_adapter_if_t tcpip_adapter;
             rc = tcpip_adapter_create_ip6_linklocal(tcpip_adapter);
             if (rc < 0) {
                 printf("[IoT-Labs]");
                 return rc;
             }
-            // rc = ENOSYS;
+            */
+            rc = ENOSYS;
             break;
 
         case _6LowPAN:

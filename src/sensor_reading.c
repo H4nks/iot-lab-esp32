@@ -157,13 +157,13 @@ write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
     trans.tx_buffer = heap_caps_malloc(len, MALLOC_CAP_DMA);
     // FIXME do we need to allocate memory for rx_buffer for write stub?
     // Answer -> NO.
-    // trans.rx_buffer = heap_caps_malloc(len, MALLOC_CAP_DMA);
+    trans.rx_buffer = heap_caps_malloc(len, MALLOC_CAP_DMA);
 
     trans.flags = 0;
     trans.addr = reg_addr;
     trans.length = len * 8;
 
-    memcpy(trans.tx_buffer, data, len);
+    memcpy(&trans.tx_buffer, data, len);
 
     rc = spi_device_transmit(spi, &trans);
     if (rc < 0) {
@@ -215,7 +215,7 @@ perform_sensor_readings(void *pvParameters)
         rc = make_a_reading(&reading, data);
 
         /* debug */
-        // print_a_reading(&reading);
+        print_a_reading(&reading);
 
         /* save obtained reading in transmission queue */
         rc = transmission_enqueue(&reading);
@@ -248,14 +248,15 @@ setup_sensors(void *pvParameters)
     //      sensors handling!
     switch (cfg->device) {
     case BME280:
-        rc = ENOSYS;
+
+        rc = initialize_spi_sensor();
         if (rc < 0) {
             printf("[IoT-Labs] Error while initializing spi bus\n");
             break;
         }
 
         struct bme280_dev dev;
-        rc = ENOSYS;
+        rc = initialize_bme_device(&dev);
         if (rc < 0) {
             printf("[IoT-Labs] Error while initializing bme280\n");
             break;

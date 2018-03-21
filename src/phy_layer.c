@@ -51,7 +51,6 @@ event_handler(void *ctx, system_event_t *event)
         break;
 
     case SYSTEM_EVENT_AP_STA_GOT_IP6:
-        // esp_wifi_connect();
         xEventGroupSetBits(wifi_event_group, IPv6_CONNECTED_BIT);
         break;
 
@@ -98,14 +97,14 @@ _wifi_init()
     }
 
     // FIXME de we absolutely need this one?
-    esp_wifi_set_storage(WIFI_STORAGE_RAM);
+    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
     if (rc < 0)
     {
         printf("[IoT-Labs] Error configuring wifi");
         return rc;
     }
 
-    esp_wifi_set_mode(WIFI_MODE_STA);
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     if (rc < 0)
     {
         printf("[IoT-Labs] Error configuring wifi");
@@ -116,11 +115,11 @@ _wifi_init()
     wifi_config_t config = {
         .sta = {
             .ssid = WIFI_SSID,
-            .password = WIFI_PASS,
+            .password = WIFI_PASS
         }
     };
 
-    esp_wifi_set_config(ESP_IF_WIFI_STA, &config);
+    ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &config));
 
     return rc;
 }

@@ -78,9 +78,12 @@ make_a_reading(struct a_reading *reading, struct bme280_data *data)
     memcpy(&reading->data, data, sizeof(*data));
 
     /* debug */
+    /*
     printf("[make_a_reading] reading->timestamp = %d\n", reading->timestamp);
     printf("[make_a_reading] reading->data->temperature = %d\n",
             reading->data.temperature);
+
+    */
 
     return rc;
 }
@@ -99,7 +102,7 @@ perform_transmissions(void *pvParameters)
 {
     int8_t rc;
     struct a_reading reading;
-    char representation[REPR_MAX];
+    // char representation[REPR_MAX];
     //cJSON json; // FIXME very bad! very, very bad! make code modular! get rid of porosity
 
     // TODO make this function wait for the connection event
@@ -114,6 +117,8 @@ perform_transmissions(void *pvParameters)
         /* format the dequeued reading and get the string representation
          * corresponding to it
          */
+        
+        
         rc = ENOSYS;
 
         /* send the formatted reading */
