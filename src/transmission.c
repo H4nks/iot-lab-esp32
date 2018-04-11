@@ -1,17 +1,17 @@
 /*
- * IoT-Labs-2018 
- * Copyright (C) 2018 Massinissa Hamidi 
- * 
+ * IoT-Labs-2018
+ * Copyright (C) 2018 Massinissa Hamidi
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -94,7 +94,7 @@ print_a_reading(const struct a_reading *reading)
     assert(reading != NULL);
     printf("[print_a_reading] timestamp = %d\n", reading->timestamp);
     printf("[print_a_reading] temperature = %f\n",
-            (float)reading->data.temperature);
+           (float)reading->data.temperature);
 }
 
 void
@@ -103,7 +103,7 @@ perform_transmissions(void *pvParameters)
     int8_t rc;
     struct a_reading reading;
     char representation[REPR_MAX];
-    cJSON json; // FIXME very bad! very, very bad! make code modular! get rid of porosity
+    // cJSON json; // FIXME very bad! very, very bad! make code modular! get rid of porosity
 
     // TODO make this function wait for the connection event
     while (1) {
@@ -117,12 +117,15 @@ perform_transmissions(void *pvParameters)
         /* format the dequeued reading and get the string representation
          * corresponding to it
          */
-        rc = json_of_reading(&json, &reading);
-
-
+        // rc = json_of_reading(&json, &reading);
+        rc = reading_formatting(&representation, &reading);
 
         /* send the formatted reading */
-        rc = ENOSYS; 
+        // TODO
+
+        // rc = send_a_reading(&representation); // FIXME
+
+        // printf("Error code: %d\n", rc);
     }
 
 // end:
