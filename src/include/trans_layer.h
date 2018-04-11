@@ -17,11 +17,37 @@
  */
 
 
+/**
+ * @brief enumeration of the available transport protocols.
+ */
 enum trans_protocols {
     TCP,
     UDP,
 };
 
+
+/**
+ * @brief starts the transport layer. It establishes a connection, in the case
+ * of TCP, with a remote server. In the case where ssl flag is set to 1, the
+ * transmissions are encrypted via an additional layer (SSL/TLS) before being
+ * passed to the socket and then transmitted.
+ *
+ * @param app_proto     the chosen transport layer protocol.
+ * @param ssl           flag specifying whereas to encrypt data or not.
+ *
+ * @return  0 on success and -1 on failure.
+ */
 int8_t transport_layer_start(enum trans_protocols app_proto, int ssl);
+
+
+/**
+ * @brief this function is called from the application layer (*_send functions)
+ * in order to send application data over the transport layer. In the case of
+ * TCP transport protocol, it sends data through a previously created socket.
+ *
+ * @param data  a constant reference to data to be sent.
+ *
+ * @return  0 on success and -1 on failure.
+ */
 int8_t trans_send(const void *data);
 

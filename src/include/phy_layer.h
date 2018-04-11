@@ -24,6 +24,9 @@ extern EventGroupHandle_t wifi_event_group;
 extern const int IPv4_CONNECTED_BIT;
 extern const int IPv6_CONNECTED_BIT;
 
+/**
+ * @brief enumeration of the available physical interfaces.
+ */
 enum MAC_PHY_interfaces {
     WIFI,
     BLE,
@@ -31,4 +34,14 @@ enum MAC_PHY_interfaces {
 };
 
 
+
+/**
+ * @brief starts the physical layer according to the phy_proto argument.
+ *
+ * @param phy_proto     the chosen physical interface to run the communication
+ * stack upon.
+ *
+ * @return  0 on success and -1 on failure.
+ */
 int8_t physical_layer_start(enum MAC_PHY_interfaces phy_proto);
+
