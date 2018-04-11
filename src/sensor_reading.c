@@ -141,8 +141,8 @@ read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
     memcpy(data, trans.rx_buffer, len);
 
     /* debug */
-    for (int i = 0; i < len; i++)
-        printf("rx_buffer[%d] = %d\n", i, ((uint8_t*)trans.rx_buffer)[i]);
+    // for (int i = 0; i < len; i++)
+    //     printf("rx_buffer[%d] = %d\n", i, ((uint8_t*)trans.rx_buffer)[i]);
     vTaskDelay(1000 / portTICK_RATE_MS);
 
     return rc;
@@ -188,9 +188,11 @@ _perform_sensor_readings(struct bme280_dev *dev, struct bme280_data *data)
     rc = bme280_get_sensor_data(BME280_ALL, data, dev);
 
     /* debug */
+    /*
     printf("temperature = %f DegC\n", (float)data->temperature / 100);
     printf("humidity = %f %%RH\n", (float)data->humidity / 1024);
     printf("pressure = %f Pa\n", (float)data->pressure / 256);
+    */
 
     return rc;
 }
@@ -215,7 +217,7 @@ perform_sensor_readings(void *pvParameters)
         rc = make_a_reading(&reading, data);
 
         /* debug */
-        print_a_reading(&reading);
+        // print_a_reading(&reading);
 
         /* save obtained reading in transmission queue */
         rc = transmission_enqueue(&reading);

@@ -1,17 +1,17 @@
 /*
- * IoT-Labs-2018 
- * Copyright (C) 2018 Massinissa Hamidi 
- * 
+ * IoT-Labs-2018
+ * Copyright (C) 2018 Massinissa Hamidi
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,40 +27,36 @@ int8_t
 json_of_reading(cJSON *json, const struct a_reading *reading)
 {
     int8_t rc = 0;
-    cJSON *timestamp;
     cJSON *bme280_reading;
-    cJSON *temperature;
-    cJSON *pressure;
-    cJSON *humidity;
 
     printf("[json_of_reading] ##########################\n");
-    print_a_reading(reading);
+    // print_a_reading(reading);
 
     /* create root node */
     json = cJSON_CreateObject();
 
-    timestamp = cJSON_CreateNumber(reading->timestamp);
+    if (cJSON_AddNumberToObject(json, "timestamp", reading->timestamp) == NULL)
+    {
+        goto end;
+    }
+
     bme280_reading = cJSON_CreateObject();
 
-    temperature = cJSON_CreateNumber(reading->data.temperature);
-    if (!temperature) {
-        printf("\n");
+    if (cJSON_AddNumberToObject(bme280_reading, "temperature", reading->data.temperature) == NULL)
+    {
+        goto end;
+    }
+    
+    if (cJSON_AddNumberToObject(bme280_reading, "pressure", reading->data.pressure) == NULL)
+    {
+        goto end;
+    }
+    if (cJSON_AddNumberToObject(bme280_reading, "humidity", reading->data.humidity) == NULL)
+    {
         goto end;
     }
 
-    pressure = cJSON_CreateNumber(reading->data.pressure);
-    if (!pressure) {
-        printf("\n");
-        goto end;
-    }
-
-    humidity = cJSON_CreateNumber(reading->data.humidity);
-    if (!humidity) {
-        printf("\n");
-        goto end;
-    }
-
-    /* TODO failwith "Students, this is your job!" */
+    cJSON_AddItemToObject(json, "reading", bme280_reading);
 
     /* debug */
     printf("%s\n", cJSON_Print(json));
@@ -85,7 +81,10 @@ int8_t
 string_of_json(char *buff, cJSON *json)
 {
     int8_t rc;
-    rc = ENOSYS;
+    buff = cJSON_Print(json);
+    if (buff == NULL) {
+        rc = ENOSYS;
+    }
     return rc;
 }
 
@@ -101,7 +100,7 @@ reading_formatting(char *representation, const struct a_reading *reading)
         printf("[IoT-Labs] Error while making json from a reading\n");
         return rc;
     }
-    
+
     // get string representation of json object
     rc = string_of_json(representation, &json);
     if (rc < 0) {

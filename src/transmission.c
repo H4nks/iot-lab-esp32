@@ -102,8 +102,8 @@ perform_transmissions(void *pvParameters)
 {
     int8_t rc;
     struct a_reading reading;
-    // char representation[REPR_MAX];
-    //cJSON json; // FIXME very bad! very, very bad! make code modular! get rid of porosity
+    char representation[REPR_MAX];
+    cJSON json; // FIXME very bad! very, very bad! make code modular! get rid of porosity
 
     // TODO make this function wait for the connection event
     while (1) {
@@ -112,14 +112,14 @@ perform_transmissions(void *pvParameters)
         rc = transmission_dequeue(&reading);
 
         /* debug */
-        print_a_reading(&reading);
+        // print_a_reading(&reading);
 
         /* format the dequeued reading and get the string representation
          * corresponding to it
          */
-        
-        
-        rc = ENOSYS;
+        rc = json_of_reading(&json, &reading);
+
+
 
         /* send the formatted reading */
         rc = ENOSYS; 
