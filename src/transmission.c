@@ -110,6 +110,10 @@ perform_transmissions(void *pvParameters)
         /* get a reading from transmission queue */
 
         rc = transmission_dequeue(&reading);
+        if (rc != pdTRUE)
+        {
+            printf("[perform_transmissions] unable to dequeue\nRC: %d\n", rc);
+        }
 
         /* debug */
         // print_a_reading(&reading);
@@ -117,15 +121,17 @@ perform_transmissions(void *pvParameters)
         /* format the dequeued reading and get the string representation
          * corresponding to it
          */
-        // rc = json_of_reading(&json, &reading);
-        rc = reading_formatting(&representation, &reading);
+        
+        rc = reading_formatting(representation, &reading);
+        if (rc != 88)
+        {
+            printf("[perform_transmissions] unable to format reading\nRC: %d\n", rc);
+        }
 
         /* send the formatted reading */
         // TODO
 
         // rc = send_a_reading(&representation); // FIXME
-
-        // printf("Error code: %d\n", rc);
     }
 
 // end:

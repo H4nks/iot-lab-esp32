@@ -1,17 +1,17 @@
 /*
- * IoT-Labs-2018 
- * Copyright (C) 2018 Massinissa Hamidi 
- * 
+ * IoT-Labs-2018
+ * Copyright (C) 2018 Massinissa Hamidi
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,9 +30,10 @@
 #include "mbedtls/debug.h"
 /* end of mbedtls includes */
 
+#include "tcpip_adapter.h"
 #include "trans_layer.h"
 
-struct netconn cx;
+struct netconn *cx;
 
 int8_t
 establish_conn(int port, char * hostname)
@@ -40,8 +41,35 @@ establish_conn(int port, char * hostname)
     int8_t rc;
     ip_addr_t local_ip;
     ip_addr_t remote_ip;
+    tcpip_adapter_ip_info_t ip_info;
 
-    rc = ENOSYS;
+    rc = EINPROGRESS;
+
+    cx = netconn_new(NETCONN_TCP);
+    if (cx == NULL) {
+        // No memory for new connection?
+        printf("[IoT-Labs] Error while creating a new NetConn connection\n");
+        return rc;
+    }
+
+    rc = tcpip_adapter_get_ip_info(TCPIP_ADAPTER_IF_STA, &ip_info);
+    if (rc < 0) {
+        printf("[IoT-Labs] Error while getting ip information\n");
+        return rc;
+    }
+
+    local_ip.u_addr.ip4 = ip_info.ip;
+
+    rc = netconn_gethostbyname("Hanks-MBP-2", &remote_ip);
+
+    rc = netconn_connect ( cx, &remote_ip, 3000 );
+    if ( rc != ERR_OK)
+    {
+        printf("[establish_conn] connection failed\n");
+        netconn_delete ( cx );
+        return rc;
+    }
+
 
     return rc;
 }
@@ -64,15 +92,15 @@ transport_layer_start(enum trans_protocols trans_proto, int ssl_flag)
     int8_t rc;
 
     switch (trans_proto) {
-        case TCP:
-            rc = ENOSYS;
-            break;
-        case UDP:
-            rc = ENOSYS;
-            break;
-        default:
-            rc = ENOSYS;
-            break;
+    case TCP:
+        rc = ENOSYS;
+        break;
+    case UDP:
+        rc = ENOSYS;
+        break;
+    default:
+        rc = ENOSYS;
+        break;
     }
 
     return rc;
