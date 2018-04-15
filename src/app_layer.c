@@ -1,17 +1,17 @@
 /*
- * IoT-Labs-2018 
- * Copyright (C) 2018 Massinissa Hamidi 
- * 
+ * IoT-Labs-2018
+ * Copyright (C) 2018 Massinissa Hamidi
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,8 +28,8 @@
 
 #define REQUEST_SIZE_MAX    200
 
-char hostname[] = "hostname";
-char resource[] = "/resource";
+char hostname[] = "hostname";   // where to use this ?
+char resource[] = "/resource";  // where to use this ?
 
 // TODO probably introducing an encryption layer on top of the application
 // protocol (application layer encryption). This has not to be confused with
@@ -48,18 +48,19 @@ application_layer_start(enum app_protocols app_proto)
     int8_t rc;
 
     switch (app_proto) {
-        case HTTP:
-            rc = ENOSYS;
-            break;
-        case CoAP:
-            rc = ENOSYS;
-            break;
-        case MQTT:
-            rc = ENOSYS;
-            break;
-        default:
-            rc = ENOSYS;
-            break;
+    case HTTP:
+        // rc = establish_conn(3000, &hostname);     // FIXME
+        // error: implicit declaration of function 'establish_conn' 
+        break;
+    case CoAP:
+        rc = ENOSYS;
+        break;
+    case MQTT:
+        rc = ENOSYS;
+        break;
+    default:
+        rc = ENOSYS;
+        break;
     }
 
     return rc;
@@ -87,17 +88,32 @@ http_send(const char *formatted_reading)
     int8_t rc;
     char *sendline;
 
-    sendline = (char*)malloc(REQUEST_SIZE_MAX*sizeof(char));
+    sendline = (char*)malloc(REQUEST_SIZE_MAX * sizeof(char));
     if (sendline == NULL) {
         printf("[IoT-Labs] Error while allocating memory for http request\n");
         return errno;
     }
 
+
+    // according to documentation, I'm not sure about this one but the other way
+    // triggers an error
+    snprintf(sendline, REQUEST_SIZE_MAX * sizeof(char), formatted_reading);
+
+    /* debug */
+    printf("[http_send] sendline: %s\n", sendline);
+
+
     /* wrap formatted_reading with an HTTP request, ... */
-    rc = ENOSYS; 
+    // rc = ENOSYS;
+
 
     /* ... then send it via transport layer */
-    rc = ENOSYS;
+    rc = trans_send(sendline);
+
+    /* debug */
+    printf("[http_send] RC: %d\n", rc);
+
+
 
     return rc;
 }

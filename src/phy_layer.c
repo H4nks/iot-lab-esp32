@@ -24,8 +24,8 @@
 
 #include "phy_layer.h"
 
-#define WIFI_SSID "HanksDroid"
-#define WIFI_PASS "alpine123"
+#define WIFI_SSID "wifi"
+#define WIFI_PASS "p@55w0rd"
 
 EventGroupHandle_t wifi_event_group;
 const int IPv4_CONNECTED_BIT = BIT0;

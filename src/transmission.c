@@ -77,14 +77,6 @@ make_a_reading(struct a_reading *reading, struct bme280_data *data)
     reading->timestamp = xTaskGetTickCount();
     memcpy(&reading->data, data, sizeof(*data));
 
-    /* debug */
-    /*
-    printf("[make_a_reading] reading->timestamp = %d\n", reading->timestamp);
-    printf("[make_a_reading] reading->data->temperature = %d\n",
-            reading->data.temperature);
-
-    */
-
     return rc;
 }
 
@@ -103,12 +95,10 @@ perform_transmissions(void *pvParameters)
     int8_t rc;
     struct a_reading reading;
     char representation[REPR_MAX];
-    // cJSON json; // FIXME very bad! very, very bad! make code modular! get rid of porosity
 
     // TODO make this function wait for the connection event
     while (1) {
         /* get a reading from transmission queue */
-
         rc = transmission_dequeue(&reading);
         if (rc != pdTRUE)
         {
@@ -123,15 +113,12 @@ perform_transmissions(void *pvParameters)
          */
         
         rc = reading_formatting(representation, &reading);
-        if (rc != 88)
-        {
-            printf("[perform_transmissions] unable to format reading\nRC: %d\n", rc);
-        }
 
         /* send the formatted reading */
         // TODO
 
-        // rc = send_a_reading(&representation); // FIXME
+        rc = send_a_reading(representation); // FIXME
+        // errors and weird things happend here
     }
 
 // end:
