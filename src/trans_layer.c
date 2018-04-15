@@ -33,6 +33,9 @@
 #include "tcpip_adapter.h"
 #include "trans_layer.h"
 
+#define REMOTE_PORT    3000             // no sure if this has to be here...
+#define REMOTE_HOST    "localhost"      //
+
 struct netconn *cx;
 
 int8_t
@@ -60,9 +63,9 @@ establish_conn(int port, char * hostname)
 
     local_ip.u_addr.ip4 = ip_info.ip;
 
-    rc = netconn_gethostbyname("Hanks-MBP-2", &remote_ip);
+    rc = netconn_gethostbyname(REMOTE_HOST, &remote_ip);
 
-    rc = netconn_connect ( cx, &remote_ip, 3000 );
+    rc = netconn_connect ( cx, &remote_ip, REMOTE_PORT );
     if ( rc != ERR_OK)
     {
         printf("[establish_conn] connection failed\n");
@@ -82,6 +85,11 @@ trans_send(const void *app_paquet)
     rc = ENOSYS;
     // TODO switch whether tls is enabled or not and choose the right function
     // in order to send data over the created socket!
+    // will have to use this : http://lwip.wikia.com/wiki/Netconn_write
+
+    rc = netconn_write(cx, app_paquet, sizeof(&app_paquet), NETCONN_NOCOPY);
+    // FIXME : netconn_write: invalid conn
+    // Impossible to write TCP message over connection
 
     return rc;
 }
